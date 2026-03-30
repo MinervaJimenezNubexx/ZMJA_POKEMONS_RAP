@@ -1,0 +1,22 @@
+<core:FragmentDefinition xmlns="sap.m" xmlns:core="sap.ui.core">
+    <Table items="{_Teams}"
+           mode="SingleSelectMaster"
+           itemPress=".onPressItem">
+        <columns>
+            <Column>
+                <Text text="{i18n>showTeamName}" />
+            </Column>
+            <Column>
+                <Text text="{i18n>showTeamStatus}" />
+            </Column>
+        </columns>
+        <items>
+            <ColumnListItem type="Navigation">
+                <cells>
+                    <Text text="{Name}" />
+                    <Text text="{Status}" />
+                </cells>
+            </ColumnListItem>
+        </items>
+    </Table>
+</core:FragmentDefinition>

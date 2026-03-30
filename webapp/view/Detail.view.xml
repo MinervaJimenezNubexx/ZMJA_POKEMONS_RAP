@@ -1,0 +1,42 @@
+<mvc:View xmlns:form="sap.ui.layout.form" 
+    controllerName="com.nbx.pokerap.controller.Detail"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns:core="sap.ui.core"
+    xmlns="sap.m">
+    <Page id="DetailID" title="{i18n>titleDetail}" showNavButton="{= ${permissions>/rol} !== 'Trainer' }" navButtonPress=".onCloseDetail">
+        <ObjectHeader
+            title="{Firstname} {Lastname}"
+            number="{Trainerid}"
+            numberUnit="ID">
+
+                <ObjectAttribute text="{i18n>showEmail} {Email}" />
+                <ObjectAttribute text="{i18n>showBirthDate} {Birthdate}" />
+
+        </ObjectHeader>
+
+        <IconTabBar >
+            <items>
+                <IconTabFilter text="{i18n>iconTapBarTitle1}">
+                    <core:Fragment fragmentName="com.nbx.pokerap.view.fragment.teamsTable" type="XML"/>
+                </IconTabFilter>
+            </items>
+        </IconTabBar>
+
+        <footer>
+            <Toolbar>
+                <Button 
+                    text="{i18n>catchRandomPokemonButton}" 
+                    type="Emphasized" 
+                    icon="sap-icon://search"
+                    press=".onSearchRandomPokemon"
+                    visible="{permissions>/capture}"/>
+                <Button 
+                    text="{i18n>addTeamUserButton}" 
+                    type="Default" 
+                    press=".onOpenAddTeamDialog"
+                    visible="{permissions>/edit}"/>
+            </Toolbar>
+        </footer>
+
+    </Page>
+</mvc:View>

@@ -1,0 +1,33 @@
+<mvc:View controllerName="com.nbx.pokerap.controller.Captures"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns="sap.m">
+    <Page id="CapturesID" title="{i18n>titleCaptures}" showNavButton="true" navButtonPress=".onCloseCaptures">
+        <Table items="{_Captures}">
+        <columns>
+            <Column>
+                <Text text="{i18n>captureIdColumn}" />
+            </Column>
+            <Column>
+                <Text text="{i18n>captureNameColumn}" />
+            </Column>
+            <Column>
+                <Text text="{i18n>captureWeightColumn}" />
+            </Column>
+            <Column>
+                <Text text="{i18n>captureHeightColumn}" />
+            </Column>
+        </columns>
+        <items>
+            <ColumnListItem>
+                <cells>
+                    <Text text="{Captureid}" />
+                    <Text text="{Nombre}" />
+                    <Text text="{Altura}" />
+                    <Text text="{Peso}" />
+                </cells>
+            </ColumnListItem>
+        </items>
+    </Table>
+
+    </Page>
+</mvc:View>

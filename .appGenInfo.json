@@ -1,0 +1,24 @@
+{
+  "generationParameters": {
+    "generationDate": "Fri Mar 27 2026 12:39:48 GMT+0000 (Coordinated Universal Time)",
+    "generatorPlatform": "SAP Business Application Studio",
+    "serviceType": "SAP System (ABAP Cloud)",
+    "metadataFilename": "",
+    "serviceUrl": "https://87073b08-232b-42f9-ae7c-bc59cf2ae025.abap.us10.hana.ondemand.com/sap/opu/odata4/sap/zmja_ui_trainers_o4/srvd/sap/zmja_ui_trainers/0001/",
+    "appName": "pokerap",
+    "appTitle": "Trainer List",
+    "appDescription": "An SAP Fiori application.",
+    "appNamespace": "com.nbx",
+    "ui5Theme": "sap_horizon",
+    "ui5Version": "1.142.7",
+    "enableEslint": false,
+    "enableTypeScript": false,
+    "showMockDataInfo": true,
+    "generatorVersion": "1.21.0",
+    "template": "Basic V4",
+    "generatorName": "SAP Fiori Application Generator",
+    "entityRelatedConfig": [],
+    "launchText": "To launch the generated application, run the following from the generated application root folder:\n\n```\n    npm start\n```",
+    "valueHelpDownloaded": true
+  }
+}

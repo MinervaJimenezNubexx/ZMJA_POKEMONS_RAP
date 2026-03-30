@@ -1,0 +1,55 @@
+<mvc:View
+    controllerName="com.nbx.pokerap.controller.Main"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns="sap.m"
+>
+    <Page
+        id="MainID"
+        title="{i18n>MainTitle}"
+        visible="{= ${permissions>/rol} !== 'Trainer' }"
+    >
+        <Table
+            id="idTrainersTable"
+            items="{/Trainers}"
+            mode="SingleSelectMaster"
+            itemPress=".onPressItem"
+        >
+            <columns>
+                <Column width="5em">
+                    <Text text="{i18n>TrainerIdColumn}" />
+                </Column>
+                <Column width="5em">
+                    <Text text="{i18n>FirstNameColumn}" />
+                </Column>
+                <Column width="5em">
+                    <Text text="{i18n>LastNameColumn}" />
+                </Column>
+
+            </columns>
+            <items>
+                <ColumnListItem type="Navigation">
+                    <cells>
+                        <Text text="{Trainerid}" />
+                        <Text text="{Firstname}" />
+                        <Text text="{Lastname}" />
+                    </cells>
+                </ColumnListItem>
+            </items>
+        </Table>
+        <footer>
+            <Toolbar>
+                <ToolbarSpacer /> 
+                <Button 
+                    text="{i18n>AddTrainerMainButton}" 
+                    type="Default" 
+                    press=".onAddDocument" 
+                    visible="{permissions>/admin}"/>
+                <Button 
+                    text="{i18n>AddTeamMainButton}" 
+                    type="Default" 
+                    press=".onOpenAddTeamDialog"
+                    visible="{permissions>/admin}"/>
+            </Toolbar>
+        </footer>
+    </Page>
+</mvc:View>
