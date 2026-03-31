@@ -11,17 +11,17 @@
             <form:SimpleForm layout="ColumnLayout" editable="true">
                 <form:content>
                     <Label text="{i18n>randomPokemonName}"/>
-                    <Text text="{randomPokemon>/name}" />
+                    <Text text="{randomPokemon>/Nombre}" />
                     
                     <Label text="{i18n>randomPokemonWeight}"/>
-                    <Text text="{randomPokemon>/weight} {i18n>randomPokemonWeigthMeasurement}" />
+                    <Text text="{randomPokemon>/Peso} {i18n>randomPokemonWeigthMeasurement}" />
                     
                     <Label text="{i18n>randomPokemonHeigth}"/>
-                    <Text text="{randomPokemon>/height} {i18n>randomPokemonHeigthmeasurement}" />
+                    <Text text="{randomPokemon>/Altura} {i18n>randomPokemonHeigthmeasurement}" />
 
                     <Label text="{i18n>randomPokemonSelectTeamLabel}" required="true"/>
-                    <Select id="teamSelector" items="{Teams}">
-                        <core:Item key="{ID}" text="{Name}" />
+                    <Select id="teamSelector" items="{_Teams}">
+                        <core:Item key="{Teamid}" text="{Name}" />
                     </Select>
                 </form:content>
             </form:SimpleForm>

@@ -72,8 +72,8 @@ sap.ui.define([
                 oContext = oItem.getBindingContext(),
                 oRouter = this.getRouter();
 
-            let sPath = oContext.getPath();
-            let sEncodedPath = encodeURIComponent(sPath);
+            let sPath = oContext.getPath(),
+                sEncodedPath = encodeURIComponent(sPath);
 
             oRouter.navTo("RouteCaptures", {
                 contextPath: sEncodedPath
@@ -83,18 +83,30 @@ sap.ui.define([
         // CAPTURE RANDOM POKEMONS
 
         onSearchRandomPokemon: function () {
-            let oModel = this.getView().getModel(),
-                oFunction = oModel.bindContext("/getRandomPokemon(...)");
+            let iRandomPokedex = Math.floor(Math.random() * 151) + 1,
+                oModel = this.getView().getModel();
 
             sap.ui.core.BusyIndicator.show(0);
 
-            oFunction.execute().then(() => {
+            let oContextBinding = oModel.bindContext("/Pokemons(" + iRandomPokedex + ")", null, {
+                "$select": "Nombre,Altura,Peso"
+            });
+
+            oContextBinding.requestObject().then((oPokemonData) => {
                 sap.ui.core.BusyIndicator.hide();
-                let oPokemonData = oFunction.getBoundContext().getObject();
-                this.getView().getModel("randomPokemon").setData(oPokemonData);
+
+                let sNombre = oPokemonData.Nombre || oPokemonData.nombre || oPokemonData.NOMBRE || "Desconocido",
+                    sAltura = oPokemonData.Altura || oPokemonData.altura || oPokemonData.ALTURA || 0,
+                    sPeso = oPokemonData.Peso || oPokemonData.peso || oPokemonData.PESO || 0;
+
+                this.getView().getModel("randomPokemon").setData({
+                    Nombre: sNombre,
+                    Altura: sAltura,
+                    Peso: sPeso
+                });
 
                 if (!this._catchDialog) {
-                    Fragment.load({
+                    sap.ui.core.Fragment.load({
                         id: this.getView().getId(),
                         name: "com.nbx.pokerap.view.fragment.catchPokemonDialog",
                         controller: this
@@ -109,7 +121,7 @@ sap.ui.define([
 
             }).catch((oError) => {
                 sap.ui.core.BusyIndicator.hide();
-                MessageBox.error(this._o18n.getText('findRandomPokemonError') + ' ' + oError.message);
+                sap.m.MessageBox.error("El Pokémon se escapó: " + oError.message);
             });
         },
 
@@ -121,35 +133,69 @@ sap.ui.define([
 
         onCapturePokemon: function () {
             let oSelect = this.byId("teamSelector"),
-                sSelectedTeamId = oSelect.getSelectedKey();
+                oSelectedItem = oSelect.getSelectedItem();
 
-            if (!sSelectedTeamId) {
-                MessageBox.warning(this._o18n.getText('noTeamSelectedWarning'));
+            if (!oSelectedItem) {
+                sap.m.MessageBox.warning(this._o18n.getText('noTeamSelectedWarning'));
                 return;
             }
 
-            let sPokemonId = this.getView().getModel("randomPokemon").getProperty("/ID"),
-                oModel = this.getView().getModel();
-
-            let sActionPath = "/Teams(" + sSelectedTeamId + ")/CapService.addCapture(...)",
-                oAction = oModel.bindContext(sActionPath);
-
-            oAction.setParameter("pokemonId", sPokemonId);
+            let oModel = this.getView().getModel(),
+                oPokemonData = this.getView().getModel("randomPokemon").getData(),
+                sNamespace = "com.sap.gateway.srvd.zmja_ui_trainers.v0001",
+                sTrainerId = this._sTrainerId,
+                sTeamId = oSelectedItem.getBindingContext().getProperty("Teamid"),
+                sDraftTrainerPath = "/Trainers(Trainerid=" + sTrainerId + ",IsActiveEntity=false)",
+                sDraftCapturePath = sDraftTrainerPath + "/_Teams(Teamid=" + sTeamId + ",IsActiveEntity=false)/_Captures";
 
             sap.ui.core.BusyIndicator.show(0);
 
-            oAction.execute().then(() => {
+            let oActiveTrainerContext = this.getView().getBindingContext(),
+                oEditAction = oModel.bindContext(sNamespace + ".Edit(...)", oActiveTrainerContext);
+            oEditAction.setParameter("PreserveChanges", true);
+
+            oEditAction.execute().then(() => {
+                let sGroupId = "captureGroup",
+                    oListBinding = oModel.bindList(sDraftCapturePath, null, [], [], { $$updateGroupId: sGroupId });
+
+                let oContext = oListBinding.create({
+                    Nombre: oPokemonData.Nombre,
+                    Altura: parseInt(oPokemonData.Altura),
+                    Peso: parseInt(oPokemonData.Peso)
+                });
+                oModel.submitBatch(sGroupId);
+
+                return oContext.created();
+
+            }).then(() => {
+                let oDraftBinding = oModel.bindContext(sDraftTrainerPath);
+                return oDraftBinding.requestObject().then(() => oDraftBinding.getBoundContext());
+
+            }).then((oDraftContext) => {
+                let oActivateAction = oModel.bindContext(sNamespace + ".Activate(...)", oDraftContext);
+                return oActivateAction.execute();
+
+            }).then(() => {
+
                 sap.ui.core.BusyIndicator.hide();
-                MessageToast.show(this._o18n.getText('MessagePokmnCaptured'));
+                sap.m.MessageToast.show(this._o18n.getText('MessagePokmnCaptured'));
+
                 if (this._catchDialog) {
                     this._catchDialog.close();
                 }
 
-                oModel.refresh();
-                //constants.var1;
+                this.getView().getBindingContext().refresh();
+
             }).catch((oError) => {
-                sap.ui.core.BusyIndicator.hide();
-                MessageBox.error(this._o18n.getText('MessageErrorPokmnCaptured') + oError.message);
+                let oDraftBinding = oModel.bindContext(sDraftTrainerPath);
+
+                oDraftBinding.requestObject().then(() => {
+                    let oDiscardAction = oModel.bindContext(sNamespace + ".Discard(...)", oDraftBinding.getBoundContext());
+                    oDiscardAction.execute();
+                }).finally(() => {
+                    sap.ui.core.BusyIndicator.hide();
+                    sap.m.MessageBox.error("La Pokéball falló: " + (oError.message || "Revisa la consola"));
+                });
             });
         },
 

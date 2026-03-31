@@ -6,7 +6,6 @@
     xmlns="sap.m">
 
     <App id="app">
-
         <f:FlexibleColumnLayout
             id="layout"
             layout="{appView>/layout}" />

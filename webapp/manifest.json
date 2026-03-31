@@ -49,7 +49,8 @@
       "minUI5Version": "1.142.7",
       "libs": {
         "sap.m": {},
-        "sap.ui.core": {}
+        "sap.ui.core": {},
+        "sap.f": {}
       }
     },
     "contentDensities": {
@@ -82,7 +83,7 @@
     },
     "routing": {
       "config": {
-        "routerClass": "sap.m.routing.Router",
+        "routerClass": "sap.f.routing.Router",
         "controlAggregation": "pages",
         "controlId": "app",
         "transition": "slide",
