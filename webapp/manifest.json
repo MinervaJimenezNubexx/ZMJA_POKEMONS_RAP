@@ -72,6 +72,9 @@
           "autoExpandSelect": true,
           "earlyRequests": true
         }
+      },
+      "permissions": {
+        "type": "sap.ui.model.json.JSONModel"
       }
     },
     "resources": {
@@ -84,19 +87,19 @@
     "routing": {
       "config": {
         "routerClass": "sap.f.routing.Router",
-        "controlAggregation": "pages",
-        "controlId": "app",
+        "controlAggregation": "beginColumnPages",
+        "controlId": "layout",
         "transition": "slide",
         "type": "View",
         "viewType": "XML",
         "path": "com.nbx.pokerap.view",
-        "async": true,
-        "viewPath": "com.nbx.pokerap.view"
+        "async": true
       },
       "routes": [
         {
           "name": "RouteMain",
           "pattern": ":?query:",
+          "layout": "OneColumn",
           "target": [
             "TargetMain"
           ]
@@ -104,14 +107,19 @@
         {
           "name": "RouteTeams",
           "pattern": "Trainer/{trainerId}/{isActive}",
+          "layout": "TwoColumnsMidExpanded",
           "target": [
+            "TargetMain",
             "TargetDetail"
           ]
         },
         {
           "name": "RouteCaptures",
           "pattern": "Captures/:contextPath:",
+          "layout": "ThreeColumnsMidExpanded",
           "target": [
+            "TargetMain",
+            "TargetDetail",
             "TargetCaptures"
           ]
         }
@@ -119,15 +127,21 @@
       "targets": {
         "TargetMain": {
           "id": "Main",
-          "name": "Main"
+          "name": "Main",
+          "level": 1,
+          "controlAggregation": "beginColumnPages"
         },
         "TargetDetail": {
           "id": "Detail",
-          "name": "Detail"
+          "name": "Detail",
+          "level": 2,
+          "controlAggregation": "midColumnPages"
         },
         "TargetCaptures": {
           "id": "Captures",
-          "name": "Captures"
+          "name": "Captures",
+          "level": 3,
+          "controlAggregation": "endColumnPages"
         }
       }
     },
