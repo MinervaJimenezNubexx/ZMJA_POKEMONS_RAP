@@ -1,0 +1,6 @@
+@EndUserText.label: 'ZMJA_R_TRAINERS'
+@MappingRole: true
+define role ZMJA_R_TRAINERS {
+  grant select on ZMJA_R_TRAINERS
+  where TRUE;
+}

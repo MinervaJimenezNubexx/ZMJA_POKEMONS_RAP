@@ -1,0 +1,16 @@
+@EndUserText: {
+  label: 'Service Definition for ZMJA_C_TRAINERS'
+}
+@ObjectModel: {
+  leadingEntity: {
+    name: 'ZMJA_C_TRAINERS'
+  }
+}
+define service ZMJA_UI_TRAINERS
+  provider contracts odata_v4_ui {
+  expose ZMJA_C_TRAINERS as Trainers;
+  expose ZMJA_C_TEAMS    as Teams;
+  expose ZMJA_C_CAPTURES as Captures;
+  expose ZMJA_C_POKEMONS as Pokemons;
+  expose ZMJA_C_ROLES    as Roles;
+}

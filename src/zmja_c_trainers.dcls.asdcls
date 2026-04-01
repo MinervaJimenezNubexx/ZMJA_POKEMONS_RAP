@@ -1,0 +1,6 @@
+@EndUserText.label: 'ZMJA_C_TRAINERS'
+@MappingRole: true
+define role ZMJA_C_TRAINERS {
+  grant select on ZMJA_C_TRAINERS
+  where INHERITING CONDITIONS FROM ENTITY ZMJA_R_TRAINERS REPLACING { ROOT WITH _Trainers };
+}

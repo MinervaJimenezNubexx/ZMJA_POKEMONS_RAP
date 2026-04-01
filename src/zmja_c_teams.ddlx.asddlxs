@@ -1,0 +1,46 @@
+@Metadata.layer: #CORE
+@UI.headerInfo: {
+  typeName: 'Equipo',
+  typeNamePlural: 'Equipos',
+  title: { type: #STANDARD, value: 'Name' }
+}
+annotate view ZMJA_C_TEAMS with
+{
+  @UI.facet: [
+    {
+      id: 'TeamInfo',
+      purpose: #STANDARD,
+      type: #IDENTIFICATION_REFERENCE,
+      label: 'Detalles del Equipo',
+      position: 10
+    },
+    {
+      id: 'CapturesFacet',
+      purpose: #STANDARD,
+      type: #LINEITEM_REFERENCE,
+      label: 'Pokémon Capturados',
+      position: 20,
+      targetElement: '_Captures'
+    }
+  ]
+
+  @UI.hidden: true
+  Teamid;
+
+  @UI.hidden: true
+  TeamTrainerId;
+
+  @UI.lineItem: [
+    { position: 10, label: 'Nombre del Equipo' },
+    { type: #FOR_ACTION, dataAction: 'CatchWildPokemon', label: 'Catch Wild Pokemon' }
+  ]
+  @UI.identification: [
+    { position: 10, label: 'Nombre del Equipo' },
+    { type: #FOR_ACTION, dataAction: 'CatchWildPokemon', label: 'Catch Wild Pokemon' }
+  ]
+  Name;
+
+  @UI.lineItem:       [{ position: 20, label: 'Activo' }]
+  @UI.identification: [{ position: 20, label: 'Activo' }]
+  Status;
+}

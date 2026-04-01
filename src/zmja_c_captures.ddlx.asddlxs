@@ -1,0 +1,39 @@
+@Metadata.layer: #CORE
+@UI.headerInfo: { 
+  typeName: 'Captura', 
+  typeNamePlural: 'Capturas', 
+  title: { type: #STANDARD, value: 'Nombre' } 
+}
+annotate view ZMJA_C_CAPTURES with
+{
+  @UI.facet: [ 
+    {
+      id: 'CaptureInfo',
+      purpose: #STANDARD,
+      type: #IDENTIFICATION_REFERENCE,
+      label: 'Detalles de la Captura',
+      position: 10
+    }
+  ]
+
+  @UI.hidden: true
+  Captureid;
+
+  @UI.hidden: true
+  CaptureteamId;
+
+  @UI.hidden: true
+  CapturetrainerId;
+
+  @UI.lineItem:       [{ position: 10, label: 'Pokémon' }]
+  @UI.identification: [{ position: 10, label: 'Pokémon' }]
+  Nombre;
+
+  @UI.lineItem:       [{ position: 20, label: 'Altura' }]
+  @UI.identification: [{ position: 20, label: 'Altura' }]
+  Altura;
+
+  @UI.lineItem:       [{ position: 30, label: 'Peso' }]
+  @UI.identification: [{ position: 30, label: 'Peso' }]
+  Peso;
+}

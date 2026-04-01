@@ -1,0 +1,41 @@
+projection implementation in class ZMJA_BP_C_TRAINERS unique;
+strict ( 2 );
+extensible;
+use draft;
+use side effects;
+
+define behavior for ZMJA_C_TRAINERS alias Trainers
+extensible
+use etag
+{
+  use create;
+  use update;
+  use delete;
+
+  use action Edit;
+  use action Activate;
+  use action Discard;
+  use action Resume;
+  use action Prepare;
+
+  use association _Teams { create; with draft; }
+
+}
+
+define behavior for ZMJA_C_TEAMS alias Teams
+{
+  use update;
+  use action CatchWildPokemon;
+
+  use association _Trainer { with draft; }
+  use association _Captures { create; with draft; }
+}
+
+define behavior for ZMJA_C_CAPTURES alias Captures
+{
+  use update;
+  use delete;
+
+  use association _Teams { with draft; }
+  use association _Trainer { with draft; }
+}

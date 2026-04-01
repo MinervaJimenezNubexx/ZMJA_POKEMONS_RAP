@@ -1,0 +1,145 @@
+managed implementation in class ZMJA_BP_POKEMON unique;
+strict ( 2 );
+with draft;
+extensible;
+
+define behavior for ZMJA_R_TRAINERS alias Trainers
+persistent table zmja_trainers
+extensible
+draft table zmja_dtrainers
+etag master LocalLastChangedAt
+lock master total etag LastChangedAt
+authorization master ( global )
+{
+  field ( numbering : managed, readonly ) //numbering managed porque el id es de tipo sysuuidx16
+  Trainerid;
+
+  field ( mandatory ) Firstname, Lastname, Email, Birthdate;
+
+  field ( readonly )
+  CreatedBy,
+  CreatedAt,
+  LocalLastChangedBy,
+  LocalLastChangedAt,
+  LastChangedAt;
+
+  validation validateEmail on save { field Email; create; update; }
+  validation validateAge on save { field Birthdate; create; update; }
+  validation validateTrainerMandatoryFields on save { create; update; field Firstname, Lastname, Email, Birthdate; }
+
+  create;
+  update;
+  delete;
+
+  association _Teams { create; with draft; }
+
+  draft action Activate optimized;
+  draft action Discard;
+  draft action Edit;
+  draft action Resume;
+  draft determine action Prepare
+  {
+    validation validateEmail;
+    validation validateAge;
+    validation validateTrainerMandatoryFields;
+    validation Teams~validateTeamMandatoryFields;
+    validation Captures~validateUniquePokemon;
+    validation Captures~validateCaptureMandatoryFields;
+    validation Teams~validateActiveTeam;
+  }
+
+  mapping for zmja_trainers corresponding extensible
+    {
+      Trainerid          = TRAINERID;
+      Firstname          = FIRSTNAME;
+      Lastname           = LASTNAME;
+      Email              = EMAIL;
+      Birthdate          = BIRTHDATE;
+      CreatedBy          = CREATED_BY;
+      CreatedAt          = CREATED_AT;
+      LocalLastChangedBy = LOCAL_LAST_CHANGED_BY;
+      LocalLastChangedAt = LOCAL_LAST_CHANGED_AT;
+      LastChangedAt      = LAST_CHANGED_AT;
+    }
+}
+
+define behavior for ZMJA_R_TEAMS alias Teams
+persistent table zmja_teams
+draft table zmja_dteams
+lock dependent by _Trainer
+authorization dependent by _Trainer
+etag master LocalLastChangedAt
+{
+
+
+  field ( readonly ) TeamTrainerId;
+  field ( numbering : managed, readonly : update )
+  Teamid;
+
+  field ( mandatory ) Name;
+
+  determination setInactiveOnCreate on modify { create; }
+  validation validateActiveTeam on save { field Status; create; update; }
+  validation validateTeamMandatoryFields on save { create; update; field Name; }
+
+  update;
+  action CatchWildPokemon result [1] $self;
+  side effects {
+    action CatchWildPokemon affects entity _Captures;
+  }
+
+
+  association _Trainer { with draft; }
+  association _Captures { create; with draft; }
+
+  mapping for zmja_teams
+    {
+      Teamid             = TEAMID;
+      TeamTrainerId      = TEAMTRAINER_ID;
+      Name               = NAME;
+      Status             = STATUS;
+      CreatedBy          = CREATED_BY;
+      CreatedAt          = CREATED_AT;
+      LocalLastChangedBy = LOCAL_LAST_CHANGED_BY;
+      LocalLastChangedAt = LOCAL_LAST_CHANGED_AT;
+      LastChangedAt      = LAST_CHANGED_AT;
+    }
+}
+
+define behavior for ZMJA_R_CAPTURES alias Captures
+persistent table zmja_captures
+draft table zmja_dcapture
+lock dependent by _Trainer
+authorization dependent by _Trainer
+etag master LocalLastChangedAt
+{
+  update;
+  delete ( precheck );
+
+  field ( readonly ) CaptureteamId, CapturetrainerId;
+  field ( numbering : managed, readonly : update )
+  Captureid;
+
+  field ( mandatory ) Nombre, Altura, Peso;
+
+  validation validateUniquePokemon on save { field nombre; create; update; }
+  validation validateCaptureMandatoryFields on save { create; update; field Nombre, Altura, Peso; }
+
+  association _Teams { with draft; }
+  association _Trainer { with draft; }
+
+  mapping for zmja_captures
+    {
+      Captureid          = CAPTUREID;
+      CaptureteamId      = CAPTURETEAM_ID;
+      CapturetrainerId   = CAPTURETRAINER_ID;
+      Nombre             = NOMBRE;
+      Altura             = ALTURA;
+      Peso               = PESO;
+      CreatedBy          = CREATED_BY;
+      CreatedAt          = CREATED_AT;
+      LocalLastChangedBy = LOCAL_LAST_CHANGED_BY;
+      LocalLastChangedAt = LOCAL_LAST_CHANGED_AT;
+      LastChangedAt      = LAST_CHANGED_AT;
+    }
+}
