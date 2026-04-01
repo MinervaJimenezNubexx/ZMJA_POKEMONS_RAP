@@ -19,7 +19,7 @@ sap.ui.define([
         init: function () {
             this.setModel(new JSONModel({ layout: "OneColumn" }), "appView");
             this.setModel(new JSONModel({ rol: "" }), "permissions");
-            
+            this._o18n = this.getModel("i18n").getResourceBundle();
             UIComponent.prototype.init.apply(this, arguments);
             this._showRoleSelector();
         },
@@ -28,17 +28,17 @@ sap.ui.define([
             const oEmailBox = new VBox("idEmailBox", {
                 visible: false,
                 items: [
-                    new Label({ text: "Tu Email de Entrenador:", design: "Bold" }).addStyleClass("sapUiSmallMarginTop"),
-                    new Input("idTrainerEmail", { placeholder: "ejemplo@nubexx.com" })
+                    new Label({ text: (this._o18n.getText('loginTrainerEmail')), design: "Bold" }).addStyleClass("sapUiSmallMarginTop"),
+                    new Input("idTrainerEmail", { placeholder: this._o18n.getText('loginEmailPlaceholder') })
                 ]
             });
 
             const oDialog = new Dialog({
-                title: "Acceso al Sistema PokeRap",
+                title: this._o18n.getText('loginTitle'),
                 contentWidth: "300px",
                 content: new VBox({
                     items: [
-                        new Label({ text: "Selecciona tu Rol:" }),
+                        new Label({ text: this._o18n.getText('loginSelectRole') }),
                         new Select("idRoleSelect", {
                             width: "100%",
                             items: [
@@ -56,14 +56,14 @@ sap.ui.define([
                 }).addStyleClass("sapUiSmallMargin"),
                 
                 beginButton: new Button({
-                    text: "Log in",
+                    text: this._o18n.getText('loginButton'),
                     type: "Emphasized",
                     press: function () {
                         const sRole = sap.ui.getCore().byId("idRoleSelect").getSelectedKey();
                         const sEmail = sap.ui.getCore().byId("idTrainerEmail").getValue();
 
                         if (sRole === "Trainer" && !sEmail) {
-                            sap.m.MessageToast.show("Por favor, introduce tu email");
+                            sap.m.MessageToast.show(this._o18n.getText('loginErrorEnterEmail'));
                             return;
                         }
 
@@ -87,7 +87,7 @@ sap.ui.define([
             ]);
 
             oRoleBinding.requestContexts(0, 1).then(function (aContexts) {
-                if (aContexts.length === 0) throw new Error("Rol no encontrado");
+                if (aContexts.length === 0) throw new Error(this._o18n.getText('loginErrorUndefinedRole'));
 
                 const oRoleData = aContexts[0].getObject();
                 oPermissionsModel.setData({
@@ -122,13 +122,13 @@ sap.ui.define([
                         });
                         this.getModel("appView").setProperty("/layout", "MidColumnFullScreen");
                     } else {
-                        sap.m.MessageBox.error("No existe ningún entrenador con ese email.");
+                        sap.m.MessageBox.error(this._o18n.getText('loginErrorUndefinedEmail'));
                     }
                 }
             }.bind(this)).catch(function (oError) {
                 sap.ui.core.BusyIndicator.hide();
-                sap.m.MessageBox.error("Error: " + oError.message);
-            });
+                sap.m.MessageBox.error(this._o18n.getText('loginError') + ' ' + oError.message);
+            }.bind(this));
         }
     });
 });

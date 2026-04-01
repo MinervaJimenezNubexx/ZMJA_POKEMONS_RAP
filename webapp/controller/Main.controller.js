@@ -205,7 +205,7 @@ sap.ui.define([
 
             }).catch((oError) => {
                 sap.ui.core.BusyIndicator.hide();
-                MessageBox.error("Error: " + (oError.message || "No se pudo crear el equipo"));
+                MessageBox.error(this._o18n.getText('TeamAddedError') + oError.message);
             });
         }
     });

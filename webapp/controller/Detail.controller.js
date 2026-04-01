@@ -121,7 +121,7 @@ sap.ui.define([
 
             }).catch((oError) => {
                 sap.ui.core.BusyIndicator.hide();
-                sap.m.MessageBox.error("El Pokémon se escapó: " + oError.message);
+                sap.m.MessageBox.error(this._o18n.getText('findRandomPokemonError') + oError.message);
             });
         },
 
@@ -194,7 +194,7 @@ sap.ui.define([
                     oDiscardAction.execute();
                 }).finally(() => {
                     sap.ui.core.BusyIndicator.hide();
-                    sap.m.MessageBox.error("La Pokéball falló: " + (oError.message || "Revisa la consola"));
+                    sap.m.MessageBox.error(this._o18n.getText('MessageErrorPokmnCaptured') + oError.message);
                 });
             });
         },
@@ -280,7 +280,7 @@ sap.ui.define([
 
             }).catch((oError) => {
                 sap.ui.core.BusyIndicator.hide();
-                MessageBox.error("Error: " + (oError.message || "No se pudo crear el equipo"));
+                MessageBox.error(this._o18n.getText('TeamAddedErrorUser') + oError.message);
             });
         }
     });
