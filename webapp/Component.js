@@ -91,7 +91,7 @@ sap.ui.define([
 
                 const oRoleData = aContexts[0].getObject();
                 oPermissionsModel.setData({
-                    rol: oRoleData.Rolname,
+                    rol: oRoleData.Rolname.trim(),
                     edit: oRoleData.Edit,
                     viewer: oRoleData.Viewer,
                     admin: oRoleData.Admin,
@@ -119,7 +119,7 @@ sap.ui.define([
                         this.getRouter().navTo("RouteTeams", { 
                             trainerId: sId,
                             isActive: true 
-                        });
+                        }, true);
                         this.getModel("appView").setProperty("/layout", "MidColumnFullScreen");
                     } else {
                         sap.m.MessageBox.error(this._o18n.getText('loginErrorUndefinedEmail'));
